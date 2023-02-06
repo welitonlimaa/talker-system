@@ -9,6 +9,18 @@ const { readTalkerFile, addTalker, editTalker, deleteTalker } = require('../util
 
 const router = express.Router();
 
+router.get('/search', valideAuth, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readTalkerFile();
+
+  if (q) {
+    const filteredTalker = talkers.filter((talker) => talker.name.includes(q));
+    res.status(200).json(filteredTalker);
+  } else {
+    res.status(200).json(talkers);
+  }
+});
+
 router.get('/', async (_req, res) => {
   try {
     const talkers = await readTalkerFile();
