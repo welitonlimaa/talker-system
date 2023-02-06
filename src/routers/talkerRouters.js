@@ -5,7 +5,7 @@ const validateName = require('../middlewares/validateName');
 const validateRate = require('../middlewares/validateRate');
 const validateTalkerData = require('../middlewares/validateTalkerData');
 const validateWatchedAt = require('../middlewares/validateWatchedAt');
-const { readTalkerFile, addTalker } = require('../utils/talkerFunctions');
+const { readTalkerFile, addTalker, editTalker } = require('../utils/talkerFunctions');
 
 const router = express.Router();
 
@@ -42,6 +42,28 @@ router.post('/',
 
     const cadTalker = await addTalker(newTalker);
     res.status(201).json(cadTalker);
+  });
+
+router.put('/:id',
+  valideAuth,
+  validateTalkerData,
+  validateName,
+  validateAge,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const newTalkerData = { ...req.body };
+
+    const talkers = await readTalkerFile();
+    const personTalker = talkers.find((talker) => talker.id === Number(id));
+
+    if (personTalker) {
+      const editDataTalker = await editTalker(Number(id), newTalkerData);
+      res.status(200).json(editDataTalker);
+    } else {
+      res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
   });
 
 module.exports = router;
