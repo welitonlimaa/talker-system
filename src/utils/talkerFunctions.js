@@ -21,7 +21,20 @@ const writeTalkerFile = async (content) => {
   }
 };
 
+const addTalker = async (infos) => {
+  const data = await readTalkerFile();
+  const nextId = data[data.length - 1].id + 1;
+  const newTalker = { id: nextId, ...infos };
+
+  data.push(newTalker);
+
+  await writeTalkerFile(data);
+
+  return newTalker;
+};
+
 module.exports = {
   readTalkerFile,
   writeTalkerFile,
+  addTalker,
 };
