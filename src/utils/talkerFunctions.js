@@ -48,9 +48,19 @@ const editTalker = async (id, newTalkerData) => {
   return personTalker;
 };
 
+const deleteTalker = async (id) => {
+  const data = await readTalkerFile();
+  const newData = data.filter((dado) => dado.id !== id);
+
+  await writeTalkerFile(newData);
+
+  return null;
+};
+
 module.exports = {
   readTalkerFile,
   writeTalkerFile,
   addTalker,
   editTalker,
+  deleteTalker,
 };
